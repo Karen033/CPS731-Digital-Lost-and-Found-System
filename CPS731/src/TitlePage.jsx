@@ -8,12 +8,13 @@ function TitlePage() {
 
   return (
     <>
+    <div className="title-page">
       <div>
-        <img src={tmuLogo} className="logo" alt="Vite logo" />
+        <img src={tmuLogo} className="logo" />
       </div>
       <h1>Digital Lost and Found</h1>
       <div>
-        <img src={userProfile} className="logo user" alt="React logo" />
+        <img src={userProfile} className="logo user" />
       </div>
       <button className="login">
         <Link to='/LoginPage'>Login</Link>
@@ -22,6 +23,7 @@ function TitlePage() {
       <p>
         Register now
       </p>
+    </div>
     </>
   )
 }

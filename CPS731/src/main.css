@@ -14,9 +14,8 @@
 }
 
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -29,12 +28,13 @@ a:hover {
   color: #0A4E99;
 }
 
-body {
+html, body {
   margin: 0;
-  display: flex;
+  padding: 0; 
+  height: 100%; 
+  width: 100%;
+  overflow: hidden; 
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -53,18 +53,58 @@ button {
   background-color: white;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: black;
 }
+
 button:hover {
   border-color: #0A4E99;
+  color: #0A4E99;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+img {
+  height: 10em;
+  width:auto;
+
 }
 
 .logo {
-  height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.title-page {
+  justify-content: center; 
+  align-items: center;
+  display: flex; 
+  height: 100vh;
+  flex-direction: column; 
+}
+
+.login-page {
+  box-sizing: border-box;
+  background-color: #BFE9FF;
+  text-align: center;
+  height: 100vh; 
+  width: 100vw;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.login-page input {
+  width: 25%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
 }
