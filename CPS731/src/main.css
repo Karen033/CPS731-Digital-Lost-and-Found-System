@@ -85,6 +85,30 @@ img {
   flex-direction: column; 
 }
 
+.register-page {
+  box-sizing: border-box;
+  background-color: #FEECA8;
+  text-align: center;
+  height: 100vh; 
+  width: 100vw;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.register-page input {
+  width: 25%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+}
+
 .login-page {
   box-sizing: border-box;
   background-color: #BFE9FF;

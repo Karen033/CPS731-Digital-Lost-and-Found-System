@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import tmuLogo from './assets/tmu_logo_cropped.png'
 import userProfile from './assets/user.png'
 import { Link } from "react-router-dom";
@@ -20,9 +19,7 @@ function TitlePage() {
         <Link to='/LoginPage'>Login</Link>
       </button>
       <p>Don't have an account?</p>
-      <p>
-        Register now
-      </p>
+      <Link to="/Register">Register Now</Link>
     </div>
     </>
   )
