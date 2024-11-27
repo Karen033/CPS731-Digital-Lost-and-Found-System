@@ -107,7 +107,7 @@ function RegisterPage() {
       />
       <input
         type="text"
-        placeholder="Student ID (USER_ID)"
+        placeholder="University ID (USER_ID)"
         value={userId}
         onChange={(e) => setUserId(e.target.value)} // Handle student ID input
       />
