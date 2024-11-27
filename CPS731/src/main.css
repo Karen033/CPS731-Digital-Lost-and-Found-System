@@ -281,13 +281,14 @@ h1 {
   width: auto;
 }
 
-.setting img, .settings img, .notification img, .profile img, .back img {
-  height: 2em;
+.setting img, .settings img, .notification img, .profile img, .back img, .home img {
+  height: 3em;
   width: auto;
 }
 
-.setting, .settings, .notification, .profile, .back {
+.setting, .settings, .notification, .profile, .back, .home {
   border-color: transparent;
+  padding: 5px;
 }
 
 .report {
@@ -399,7 +400,7 @@ h1 {
   margin: 0;
 }
 
-.profile-management-page header, .setting {
+.profile-management-page header, .setting, .home {
   background-color: #609DE0;
 }
 

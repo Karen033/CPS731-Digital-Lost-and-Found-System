@@ -21,7 +21,11 @@ function ProfileManagement() {
         <div className="profile-management-page">
             <header className='header'>
                 <div>
-                    <img src={tmuLogo} className="header_logo" />
+                    <button className='home'>
+                        <Link to="/LoginPage/Home">
+                            <img src={tmuLogo} className="header_logo" />
+                        </Link>
+                    </button>
                 </div>
                 <div className='buttons'>
                     <button className='setting'>
