@@ -96,8 +96,9 @@ function HomePage() {
             <div key={item.ITEM_ID} className="item-card">
               {item.IMAGE_URL && (
                 <img
-                  src={item.IMAGE_URL}
+                  src={`https://npuneojjiqzybvnjnfsv.supabase.co/storage/v1/object/public/items/${item.IMAGE_URL}`}
                   alt={item.NAME}
+                  style={{ maxWidth: "200px", maxHeight: "200px" }}
                   className="item-image"
                 />
               )}
