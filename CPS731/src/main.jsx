@@ -10,6 +10,7 @@ import ForgotPassword from './ForgotPassword.jsx'
 import HomePage from './HomePage.jsx';
 import LostItemReport from './LostItemReport.jsx'
 import FoundItemReport from './FoundItemReport.jsx';
+import ProfileManagement from './ProfileManagement.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage/Home" element={<HomePage />} />
         <Route path="/LoginPage/LostItemReport" element={<LostItemReport />} />
         <Route path="/LoginPage/FoundItemReport" element={<FoundItemReport />} />
+        <Route path="/LoginPage/ProfileManagement" element={<ProfileManagement />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

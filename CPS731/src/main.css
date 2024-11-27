@@ -281,12 +281,12 @@ h1 {
   width: auto;
 }
 
-.settings img, .notification img, .profile img {
+.setting img, .settings img, .notification img, .profile img {
   height: 2em;
   width: auto;
 }
 
-.settings, .notification, .profile {
+.setting, .settings, .notification, .profile {
   border-color: transparent;
 }
 
@@ -303,13 +303,13 @@ h1 {
   border-radius: 10px;
 }
 
-.lost-item-page {
+.lost-item-page, .profile-management-page {
   background-color: #609DE0;
   height: 100vh;
   position: relative;
 }
 
-.lost-item-page header {
+.lost-item-page header, .profile-management-page header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -404,4 +404,27 @@ h1 {
 
 .found-container h3 {
   margin: 0;
+}
+
+.profile-management-page header, .setting {
+  background-color: #609DE0;
+}
+
+.profile-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-buttons button {
+  background-color: #FEECA8;
+  margin: 10px auto;
+  width: 400px;
+}
+
+.account-type {
+  background-color: #252525;
+  color: white;
+  border: 1px solid black;
+  width: 300px;
+  margin: 10px auto;
 }

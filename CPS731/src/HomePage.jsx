@@ -5,6 +5,7 @@ import tmuLogo from "./assets/tmu_logo_cropped.png";
 import notificationsIcon from "./assets/notification_icon.png";
 import profileIcon from "./assets/user_icon.png";
 import supabase from "./supabaseClient";
+import { Link } from "react-router-dom";
 
 function HomePage() {
     const [items, setItems] = useState([]);
@@ -82,7 +83,7 @@ function HomePage() {
                     <img src={notificationsIcon} />
                 </button>
                 <button className="profile">
-                    <img src={profileIcon} />
+                    <Link to="/LoginPage/ProfileManagement"><img src={profileIcon} /></Link>
                 </button>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
             </div>
