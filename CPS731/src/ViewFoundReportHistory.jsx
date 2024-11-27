@@ -139,7 +139,9 @@ function ViewFoundReportHistory() {
                   </div>
                   <div className="right">
                     <p>Image not available</p>
-                    <button className="edit">Edit Post</button>
+                    <button className="edit">
+                        <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
+                    </button>
                   </div>
                 </li>
               );
@@ -158,18 +160,20 @@ function ViewFoundReportHistory() {
                   <p>{submission.DESCRIPTION}</p>
                 </div>
                 <div className="right">
-                {/* Conditionally render image if publicUrl exists */}
-                {publicUrl ? (
-                    <img
-                    src={publicUrl}
-                    alt={submission.NAME}
-                    style={{ maxWidth: "200px", maxHeight: "200px" }} // Optional styling to control image size
-                    />
-                ) : (
-                    <p>Image not available</p>
-                )}
-                {/* Always render the Edit Post button */}
-                <button className="edit">Edit Post</button>
+                    {/* Conditionally render image if publicUrl exists */}
+                    {publicUrl ? (
+                        <img
+                        src={publicUrl}
+                        alt={submission.NAME}
+                        style={{ maxWidth: "200px", maxHeight: "200px" }} // Optional styling to control image size
+                        />
+                    ) : (
+                        <p>Image not available</p>
+                    )}
+                    {/* Always render the Edit Post button */}
+                    <button className="edit">
+                        <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
+                    </button>
                 </div>
               </li>
             );

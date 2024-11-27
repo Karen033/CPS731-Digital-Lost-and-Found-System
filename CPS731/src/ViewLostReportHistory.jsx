@@ -139,7 +139,9 @@ function ViewLostReportHistory() {
                   </div>
                   <div className="right">
                     <p>Image not available</p>
-                    <button className="edit">Edit Post</button>
+                    <button className="edit">
+                        <Link to={`/LoginPage/ProfileManagement/ViewLostReportHistory/${submission.ITEM_ID}/UpdateLostReport`}>Edit Report</Link>
+                    </button>
                   </div>
                 </li>
               );
@@ -167,7 +169,9 @@ function ViewLostReportHistory() {
                     ) : (
                     <p>Image not available</p>
                     )}
-                    <button className="edit">Edit Post</button>
+                    <button className="edit">
+                        <Link to={`/LoginPage/ProfileManagement/ViewLostReportHistory/${submission.ITEM_ID}/UpdateLostReport`}>Edit Report</Link>
+                    </button>
                 </div>
               </li>
             );
