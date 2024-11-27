@@ -131,6 +131,14 @@ function FoundItemPage () {
             }
     
             setMessage('Item successfully registered.');
+
+            // Clear input fields
+            setName('');
+            setDescription('');
+            setBuilding('');
+            setRoom('');
+            setDate('');
+            setFile(null);
         } catch (error) {
             console.error('Error:', error.message);
             setMessage('An unexpected error occurred.');
