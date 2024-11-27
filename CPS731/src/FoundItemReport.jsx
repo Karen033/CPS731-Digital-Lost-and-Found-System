@@ -4,6 +4,7 @@ import "./main.css";
 import userIcon from "./assets/user_icon.png";
 import settingsIcon from "./assets/settings_icon.png";
 import supabase from "./supabaseClient";
+import { Link } from "react-router-dom";
 
 function FoundItemPage () {
     const [name, setName] = useState('');
@@ -155,7 +156,9 @@ function FoundItemPage () {
                 </button>
                 <h1>Report Found Item</h1>
                 <button className="profile">
-                    <img src={userIcon} />
+                    <Link to="/LoginPage/ProfileManagement">
+                        <img src={userIcon} />
+                    </Link>
                 </button>
             </header>
             <div className="found-container">
