@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./main.css";
 import tmuLogo from "./assets/tmu_logo_cropped.png";
 import notificationsIcon from "./assets/notification_icon.png";
-import settingsIcon from "./assets/settings_icon.png";
+import profileIcon from "./assets/user_icon.png";
 import supabase from "./supabaseClient";
 
 function HomePage() {
@@ -81,8 +81,8 @@ function HomePage() {
                 <button className="notification">
                     <img src={notificationsIcon} />
                 </button>
-                <button className="settings">
-                    <img src={settingsIcon} />
+                <button className="profile">
+                    <img src={profileIcon} />
                 </button>
                 <button className="logout-button" onClick={handleLogout}>Logout</button>
             </div>
