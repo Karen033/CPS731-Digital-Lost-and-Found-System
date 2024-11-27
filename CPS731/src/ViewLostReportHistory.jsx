@@ -23,7 +23,7 @@ function ViewLostReportHistory() {
   // Fetch all necessary data
   useEffect(() => {
     if (!loggedInUser) return; // Wait until the logged-in user is available
-
+  
     const fetchLostReportHistory = async () => {
       try {
         // Fetch submissions to get items submitted by the logged-in user
@@ -32,9 +32,9 @@ function ViewLostReportHistory() {
           .select("USER_ID, ITEM_ID")
           .eq("USER_ID", loggedInUser.id); // Filter by logged-in user's ID
         if (submitsError) throw submitsError;
-
+  
         const submittedItemIds = submits.map((submit) => submit.ITEM_ID);
-
+  
         // Fetch items with LOST status associated with the logged-in user
         const { data: items, error: itemsError } = await supabase
           .from("ITEM")
@@ -42,48 +42,60 @@ function ViewLostReportHistory() {
           .in("ITEM_ID", submittedItemIds) // Filter by submitted ITEM_IDs
           .eq("STATUS", "LOST"); // Only include items with LOST status
         if (itemsError) throw itemsError;
-
+  
         // Fetch lost_at data
         const { data: lostAts, error: lostAtsError } = await supabase
           .from("LOST_AT")
           .select("ITEM_ID, LOCATION_ID, DATE");
         if (lostAtsError) throw lostAtsError;
-
+  
         // Fetch location data
         const { data: locations, error: locationsError } = await supabase
           .from("LOCATION")
           .select("LOCATION_ID, BUILDING, ROOM");
         if (locationsError) throw locationsError;
-
+  
+        // Fetch user_history status
+        const { data: userHistory, error: userHistoryError } = await supabase
+          .from("USER_HISTORY")
+          .select("ITEM_ID, STATUS")
+          .eq("USER_ID", loggedInUser.id); // Filter by logged-in user's ID
+        if (userHistoryError) throw userHistoryError;
+  
+        // Combine all data
         const combinedData = items.map((item) => {
-            const lostAt = lostAts.find((lost) => lost.ITEM_ID === item.ITEM_ID);
-            const location = locations.find(
-              (loc) => loc.LOCATION_ID === lostAt?.LOCATION_ID
-            );
-          
-            // Format location based on ROOM value
-            const formattedLocation = location
-              ? location.ROOM
-                ? `${location.BUILDING} (${location.ROOM})`
-                : `${location.BUILDING}`
-              : "Location not found";
-          
-            return {
-              ...item,
-              date: lostAt?.DATE,
-              location: formattedLocation,
-            };
-          });
-          
+          const lostAt = lostAts.find((lost) => lost.ITEM_ID === item.ITEM_ID);
+          const location = locations.find(
+            (loc) => loc.LOCATION_ID === lostAt?.LOCATION_ID
+          );
+          const history = userHistory.find(
+            (history) => history.ITEM_ID === item.ITEM_ID
+          );
+  
+          // Format location based on ROOM value
+          const formattedLocation = location
+            ? location.ROOM
+              ? `${location.BUILDING} (${location.ROOM})`
+              : `${location.BUILDING}`
+            : "Location not found";
+  
+          return {
+            ...item,
+            date: lostAt?.DATE,
+            location: formattedLocation,
+            status: history?.STATUS || "Unknown", // Add the status here
+          };
+        });
+  
         setSubmissions(combinedData);
       } catch (error) {
         console.error("Error fetching lost report history:", error);
         setFetchError("Could not fetch lost report history.");
       }
     };
-
+  
     fetchLostReportHistory();
-  }, [loggedInUser]);
+  }, [loggedInUser]);  
 
   return (
     <div className="view-lost-page">
@@ -136,6 +148,7 @@ function ViewLostReportHistory() {
                     <h2>{submission.NAME}</h2>
                     <h4>{submission.location}</h4>
                     <p>{submission.DESCRIPTION}</p>
+                    <p>Status: {submission.status}</p>
                   </div>
                   <div className="right">
                     <p>Image not available</p>
@@ -158,6 +171,7 @@ function ViewLostReportHistory() {
                   <h2>{submission.NAME}</h2>
                   <h4>{submission.location}</h4>
                   <p>{submission.DESCRIPTION}</p>
+                  <p>Status: {submission.status}</p>
                 </div>
                 <div className="right">
                     {publicUrl ? (

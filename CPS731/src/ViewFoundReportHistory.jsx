@@ -35,15 +35,15 @@ function ViewFoundReportHistory() {
 
         const submittedItemIds = submits.map((submit) => submit.ITEM_ID);
 
-        // Fetch items with LOST status associated with the logged-in user
+        // Fetch items with FOUND status associated with the logged-in user
         const { data: items, error: itemsError } = await supabase
           .from("ITEM")
           .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL")
           .in("ITEM_ID", submittedItemIds) // Filter by submitted ITEM_IDs
-          .eq("STATUS", "FOUND"); // Only include items with LOST status
+          .eq("STATUS", "FOUND"); // Only include items with FOUND status
         if (itemsError) throw itemsError;
 
-        // Fetch lost_at data
+        // Fetch found_at data
         const { data: foundAts, error: foundAtsError } = await supabase
           .from("FOUND_AT")
           .select("ITEM_ID, LOCATION_ID, DATE");
@@ -55,30 +55,42 @@ function ViewFoundReportHistory() {
           .select("LOCATION_ID, BUILDING, ROOM");
         if (locationsError) throw locationsError;
 
+        // Fetch user_history status
+        const { data: userHistory, error: userHistoryError } = await supabase
+          .from("USER_HISTORY")
+          .select("ITEM_ID, STATUS")
+          .eq("USER_ID", loggedInUser.id); // Filter by logged-in user's ID
+        if (userHistoryError) throw userHistoryError;
+
+        // Combine all data
         const combinedData = items.map((item) => {
-            const foundAt = foundAts.find((found) => found.ITEM_ID === item.ITEM_ID);
-            const location = locations.find(
-              (loc) => loc.LOCATION_ID === foundAt?.LOCATION_ID
-            );
-          
-            // Format location based on ROOM value
-            const formattedLocation = location
-              ? location.ROOM
-                ? `${location.BUILDING} (${location.ROOM})`
-                : `${location.BUILDING}`
-              : "Location not found";
-          
-            return {
-              ...item,
-              date: foundAt?.DATE,
-              location: formattedLocation,
-            };
-          });
-          
+          const foundAt = foundAts.find((found) => found.ITEM_ID === item.ITEM_ID);
+          const location = locations.find(
+            (loc) => loc.LOCATION_ID === foundAt?.LOCATION_ID
+          );
+          const history = userHistory.find(
+            (history) => history.ITEM_ID === item.ITEM_ID
+          );
+
+          // Format location based on ROOM value
+          const formattedLocation = location
+            ? location.ROOM
+              ? `${location.BUILDING} (${location.ROOM})`
+              : `${location.BUILDING}`
+            : "Location not found";
+
+          return {
+            ...item,
+            date: foundAt?.DATE,
+            location: formattedLocation,
+            status: history?.STATUS || "Unknown", // Add the status here
+          };
+        });
+
         setSubmissions(combinedData);
       } catch (error) {
-        console.error("Error fetching lost report history:", error);
-        setFetchError("Could not fetch lost report history.");
+        console.error("Error fetching found report history:", error);
+        setFetchError("Could not fetch found report history.");
       }
     };
 
@@ -112,10 +124,10 @@ function ViewFoundReportHistory() {
       </div>
       <div className="view-buttons">
         <button>
-            <Link to="/LoginPage/ProfileManagement/ViewLostReportHistory">Lost</Link>
+          <Link to="/LoginPage/ProfileManagement/ViewLostReportHistory">Lost</Link>
         </button>
         <button>
-            <Link to="/LoginPage/ProfileManagement/ViewFoundReportHistory">Found</Link>
+          <Link to="/LoginPage/ProfileManagement/ViewFoundReportHistory">Found</Link>
         </button>
       </div>
 
@@ -136,11 +148,12 @@ function ViewFoundReportHistory() {
                     <h2>{submission.NAME}</h2>
                     <h4>{submission.location}</h4>
                     <p>{submission.DESCRIPTION}</p>
+                    <p>Status: {submission.status}</p> {/* Display the status here */}
                   </div>
                   <div className="right">
                     <p>Image not available</p>
                     <button className="edit">
-                        <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
+                      <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
                     </button>
                   </div>
                 </li>
@@ -152,35 +165,36 @@ function ViewFoundReportHistory() {
             console.log("Directly generated public URL:", publicUrl);
 
             return (
-              <li key={submission.ITEM_ID} className="lost-item-container">
+              <li key={submission.ITEM_ID} className="found-item-container">
                 <div className="info">
                   <h4>{submission.date || "Unknown Date"}</h4>
                   <h2>{submission.NAME}</h2>
                   <h4>{submission.location}</h4>
                   <p>{submission.DESCRIPTION}</p>
+                  <p>Status: {submission.status}</p> {/* Display the status here */}
                 </div>
                 <div className="right">
-                    {/* Conditionally render image if publicUrl exists */}
-                    {publicUrl ? (
-                        <img
-                        src={publicUrl}
-                        alt={submission.NAME}
-                        style={{ maxWidth: "200px", maxHeight: "200px" }} // Optional styling to control image size
-                        />
-                    ) : (
-                        <p>Image not available</p>
-                    )}
-                    {/* Always render the Edit Post button */}
-                    <button className="edit">
-                        <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
-                    </button>
+                  {/* Conditionally render image if publicUrl exists */}
+                  {publicUrl ? (
+                    <img
+                      src={publicUrl}
+                      alt={submission.NAME}
+                      style={{ maxWidth: "200px", maxHeight: "200px" }} // Optional styling to control image size
+                    />
+                  ) : (
+                    <p>Image not available</p>
+                  )}
+                  {/* Always render the Edit Post button */}
+                  <button className="edit">
+                    <Link to={`/LoginPage/ProfileManagement/ViewFoundReportHistory/${submission.ITEM_ID}/UpdateFoundReport`}>Edit Report</Link>
+                  </button>
                 </div>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p>No lost items found.</p>
+        <p>No found items found.</p>
       )}
     </div>
   );
