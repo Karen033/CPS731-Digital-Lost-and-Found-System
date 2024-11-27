@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./main.css";
 import tmuLogo from "./assets/tmu_logo_cropped.png";
 import supabase from "./supabaseClient";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   const [fetchError, setFetchError] = useState(null);
@@ -98,7 +99,7 @@ function LoginPage() {
         <div>
             <button onClick={handleLogin}>Login</button>
         </div>
-        <p>Forgot password? Click here</p>
+        <p>Forgot password? <Link to='/LoginPage/ForgotPassword'>Click here</Link></p>
     </div>
   );
 }
