@@ -5,7 +5,7 @@ import userIcon from "./assets/user_icon.png";
 import settingsIcon from "./assets/settings_icon.png";
 import supabase from "./supabaseClient";
 
-function LostItemPage () {
+function FoundItemPage () {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [building, setBuilding] = useState('');
@@ -74,7 +74,7 @@ function LostItemPage () {
     
             const { error: itemError } = await supabase
                 .from('ITEM')
-                .insert([{ NAME: name, DESCRIPTION: description, STATUS: 'LOST', IMAGE_URL: fileName }]);
+                .insert([{ NAME: name, DESCRIPTION: description, STATUS: 'FOUND', IMAGE_URL: fileName }]);
     
             if (itemError) {
                 console.error('Insert error:', itemError);
@@ -111,7 +111,7 @@ function LostItemPage () {
             const locationId = locationData?.LOCATION_ID;
     
             const { error: lostAtError } = await supabase
-                .from('LOST_AT')
+                .from('FOUND_AT')
                 .insert([{ ITEM_ID: itemId, LOCATION_ID: locationId, DATE: date }]);
     
             if (lostAtError) {
@@ -131,14 +131,6 @@ function LostItemPage () {
             }
     
             setMessage('Item successfully registered.');
-
-            // Clear input fields
-            setName('');
-            setDescription('');
-            setBuilding('');
-            setRoom('');
-            setDate('');
-            setFile(null);
         } catch (error) {
             console.error('Error:', error.message);
             setMessage('An unexpected error occurred.');
@@ -148,18 +140,18 @@ function LostItemPage () {
     };    
 
     return (
-        <div className="lost-item-page">
+        <div className="found-item-page">
             <header>
                 <button className="settings">
                     <img src={settingsIcon} />
                 </button>
-                <h1>Report Lost Item</h1>
+                <h1>Report Found Item</h1>
                 <button className="profile">
                     <img src={userIcon} />
                 </button>
             </header>
-            <div className="lost-container">
-                <h3>Name of the item lost:</h3>
+            <div className="found-container">
+                <h3>Name of the item found:</h3>
                 <input
                     type="text"
                     placeholder="Input String"
@@ -167,7 +159,7 @@ function LostItemPage () {
                     onChange={(e) => setName(e.target.value)}
                 />
             </div>
-            <div className="lost-container">
+            <div className="found-container">
                 <h3>Description of the item:</h3>
                 <input
                     type="text"
@@ -176,8 +168,8 @@ function LostItemPage () {
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </div>
-            <div className="lost-container">
-                <h3>Building the item was lost in:</h3>
+            <div className="found-container">
+                <h3>Building the item was found in:</h3>
                 <input
                     type="text"
                     placeholder="Input String"
@@ -185,7 +177,7 @@ function LostItemPage () {
                     onChange={(e) => setBuilding(e.target.value)}
                 />
             </div>
-            <div className="lost-container">
+            <div className="found-container">
                 <h3>Room# if applicable:</h3>
                 <input
                     type="number"
@@ -194,8 +186,8 @@ function LostItemPage () {
                     onChange={(e) => setRoom(e.target.value)}
                 />
             </div>
-            <div className="lost-container">
-                <h3>Date the item was lost:</h3>
+            <div className="found-container">
+                <h3>Date the item was found:</h3>
                 <input
                     type="date"
                     placeholder="Input YYYY-MM-DD"
@@ -203,7 +195,7 @@ function LostItemPage () {
                     onChange={(e) => setDate(e.target.value)}
                 />
             </div>
-            <div className="lost-container">
+            <div className="found-container">
                 <h3>Upload an image of the item (optional):</h3>
                 <input
                     type="file"
@@ -218,4 +210,4 @@ function LostItemPage () {
     );
 }
 
-export default LostItemPage;
+export default FoundItemPage;

@@ -24,7 +24,7 @@ function HomePage() {
   
     const handleFoundItem = () => {
       setIsPopupOpen(false);
-      
+      navigate("/LoginPage/FoundItemReport");
     };
 
     useEffect(() => {

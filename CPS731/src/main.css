@@ -365,3 +365,43 @@ h1 {
   justify-content: center;
   align-items: center;
 }
+
+
+.found-item-page {
+  background-color: #FEECA8;
+  height: 100vh;
+  position: relative;
+}
+
+.found-item-page header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.found-item-page button {
+  border-radius: 50px;
+  background-color: #609DE0;
+}
+
+.found-container {
+  background-color: #609DE0;
+  border: 1px solid;
+  border-radius: 30px;
+  margin: 10px auto;
+  padding: 10px;
+  width: 700px;
+}
+
+.found-container input {
+  background-color: white;
+  border: 1px;
+  width: 600px;
+  height: 50px;
+  color: #4B4B4B;
+}
+
+.found-container h3 {
+  margin: 0;
+}
