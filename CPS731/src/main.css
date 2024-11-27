@@ -281,12 +281,12 @@ h1 {
   width: auto;
 }
 
-.setting img, .settings img, .notification img, .profile img {
+.setting img, .settings img, .notification img, .profile img, .back img {
   height: 2em;
   width: auto;
 }
 
-.setting, .settings, .notification, .profile {
+.setting, .settings, .notification, .profile, .back {
   border-color: transparent;
 }
 
@@ -309,7 +309,7 @@ h1 {
   position: relative;
 }
 
-.lost-item-page header, .profile-management-page header {
+.lost-item-page header, .found-item-page header, .profile-management-page header, .view-lost-page header, .view-found-page header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -373,13 +373,6 @@ h1 {
   position: relative;
 }
 
-.found-item-page header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .found-item-page button {
   border-radius: 50px;
   background-color: #609DE0;
@@ -427,4 +420,49 @@ h1 {
   border: 1px solid black;
   width: 300px;
   margin: 10px auto;
+}
+
+.view-found-page, .view-lost-page, .view-found-page header, .view-lost-page header, .view-found-page header button, .view-lost-page header button {
+  background-color: #BFE9FF;
+}
+
+.view-found-page, .view-lost-page {
+  height: 100vh;
+}
+
+.lost-item-container, .found-item-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 40vw;
+  border: 1px solid;
+  border-radius: 10px;
+  margin: auto;
+  margin-bottom: 15px;
+  background-color: white;
+  padding: 10px;
+}
+
+.view-buttons button {
+  width: 20vw;
+  background-color: #FEF7FF;
+  border-radius: 0;
+  border: transparent;
+  margin: auto;
+}
+
+.view-buttons button:hover {
+  border: 1px solid;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit {
+  width: 7.5vw;
+  margin-left: auto;
+  margin-top: auto;
+  background-color: #FEF7FF;
 }

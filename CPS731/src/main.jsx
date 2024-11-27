@@ -11,6 +11,8 @@ import HomePage from './HomePage.jsx';
 import LostItemReport from './LostItemReport.jsx'
 import FoundItemReport from './FoundItemReport.jsx';
 import ProfileManagement from './ProfileManagement.jsx';
+import ViewLostReportHistory from './ViewLostReportHistory.jsx';
+import ViewFoundReportHistory from './ViewFoundReportHistory.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -24,6 +26,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage/LostItemReport" element={<LostItemReport />} />
         <Route path="/LoginPage/FoundItemReport" element={<FoundItemReport />} />
         <Route path="/LoginPage/ProfileManagement" element={<ProfileManagement />} />
+        <Route path="/LoginPage/ProfileManagement/ViewLostReportHistory" element={<ViewLostReportHistory />} />
+        <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory" element={<ViewFoundReportHistory />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

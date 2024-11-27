@@ -39,7 +39,9 @@ function ProfileManagement() {
                 <button>University ID</button>
                 <button>University Email</button>
                 <button>Contact Information</button>
-                <button>User Lost and Found Reports</button>
+                <button>
+                    <Link to="/LoginPage/ProfileManagement/ViewLostReportHistory">User Lost and Found Reports</Link>
+                </button>
                 <button>Notification Settings</button>
                 <button>Settings and Preferences</button>
             </div>
