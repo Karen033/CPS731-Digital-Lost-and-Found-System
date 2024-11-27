@@ -7,6 +7,7 @@ import TitlePage from './TitlePage.jsx';
 import RegisterPage from './RegisterPage.jsx';
 import LoginPage from './LoginPage.jsx';
 import HomePage from './HomePage.jsx';
+import LostItemReport from './LostItemReport.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -16,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/Register" element={<RegisterPage />} />
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/LoginPage/Home" element={<HomePage />} />
+        <Route path="/LoginPage/LostItemReport" element={<LostItemReport />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

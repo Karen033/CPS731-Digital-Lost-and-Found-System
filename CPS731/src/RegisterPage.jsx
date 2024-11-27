@@ -95,6 +95,7 @@ function RegisterPage () {
             <div>
                 <button onClick={handleRegister}>Register</button>
             </div>
+            {status && <p>{status}</p>}
         </div>
     );
 }

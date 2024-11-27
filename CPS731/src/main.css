@@ -22,6 +22,8 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
+  overflow: hidden; 
+  place-items: center;
 }
 
 button {
@@ -45,6 +47,17 @@ button:hover {
 img {
   height: 10em;
   width: auto;
+  padding: 0;
+}
+
+a {
+  font-weight: 500;
+  color: black;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #0A4E99;
 }
 
 .search-bar {
@@ -85,6 +98,74 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-family: Arial, sans-serif;
+  background-color: white;
+}
+
+.logo {
+  padding: 1em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.title-page {
+  justify-content: center; 
+  display: flex; 
+  height: 100vh;
+  flex-direction: column; 
+}
+
+.title-page button {
+  width: 100px;
+  margin: 0 auto;
+}
+
+.register-page {
+  box-sizing: border-box;
+  background-color: #FEECA8;
+  text-align: center;
+  height: 100vh; 
+  width: 100vw;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.register-page input {
+  width: 25%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+}
+
+.login-page {
+  box-sizing: border-box;
+  background-color: #BFE9FF;
+  text-align: center;
+  height: 100vh; 
+  width: 100vw;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.login-page input {
+  width: 25%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
 }
 
 header {
@@ -179,4 +260,108 @@ h1 {
     width: 90%;
     opacity: 1;
   }
+}
+
+/* Header styling */
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 5px;
+  background-color: white;
+}
+
+.header button {
+  margin-right: 10px;
+}
+
+.header_logo {
+  height: 5em;
+  width: auto;
+}
+
+.settings img, .notification img, .profile img {
+  height: 2em;
+  width: auto;
+}
+
+.settings, .notification, .profile {
+  border-color: transparent;
+}
+
+.report {
+  background-color: #4B4B4B;
+  color: white;
+  height: 3em;
+}
+
+.search {
+  background-color: #BFE9FF;
+  width: 600px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.lost-item-page {
+  background-color: #609DE0;
+  height: 100vh;
+  position: relative;
+}
+
+.lost-item-page header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lost-item-page button {
+  border-radius: 50px;
+  background-color: #FEECA8;
+}
+
+.lost-container {
+  background-color: #FEECA8;
+  border: 1px solid;
+  border-radius: 30px;
+  margin: 10px auto;
+  padding: 10px;
+  width: 700px;
+}
+
+.lost-container input {
+  background-color: white;
+  border: 1px;
+  width: 600px;
+  height: 50px;
+  color: #4B4B4B;
+}
+
+.lost-container h3 {
+  margin: 0;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
