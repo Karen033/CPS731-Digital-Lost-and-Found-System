@@ -100,6 +100,7 @@ a:hover {
   justify-content: space-between;
   font-family: Arial, sans-serif;
   background-color: white;
+  height: 100vh;
   overflow-y: auto;
 }
 
@@ -200,6 +201,7 @@ h1 {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  overflow-y: auto;
 }
 
 .item-card {
