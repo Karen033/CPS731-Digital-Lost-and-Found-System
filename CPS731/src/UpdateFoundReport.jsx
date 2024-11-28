@@ -100,73 +100,105 @@ function UpdateFoundPage () {
             alert("Please fill out required fields");
             return;
         }
-
+    
         // Validate room (optional field)
         const roomNumber = room ? parseInt(room, 10) : null;
         if (room && isNaN(roomNumber)) {
             alert("Room must be a valid number.");
             return;
         }
-
+    
         // Ensure date is in valid format (YYYY-MM-DD)
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(date)) {
             alert("Date must be in YYYY-MM-DD format.");
             return;
         }
-
+    
         setUploading(true);
         try {
             let fileName = null;
+
+            // Prepare the update payload for the ITEM table
+            const itemUpdatePayload = {
+                NAME: name,
+                DESCRIPTION: description,
+            };
+    
+            // Handle file upload
             if (file) {
                 const sanitizedFileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
-                const { error: uploadError } = await supabase.storage
+                const { data: fileUploadData, error: uploadError } = await supabase.storage
                     .from('items')
                     .upload(sanitizedFileName, file);
-
+    
                 if (uploadError) {
                     setMessage('Upload failed.');
                     console.error('Error uploading file:', uploadError.message);
+                    setUploading(false);
                     return;
                 }
-                fileName = sanitizedFileName;
+                fileName = fileUploadData.path; // Path of the uploaded file
+                itemUpdatePayload.IMAGE_URL = fileName;
             }
-
+    
+            // Update the ITEM table
             const { error: itemError } = await supabase
                 .from('ITEM')
-                .update({ NAME: name, DESCRIPTION: description, IMAGE_URL: fileName || null })
+                .update(itemUpdatePayload)
                 .eq('ITEM_ID', ITEM_ID);
-
+    
             if (itemError) {
-                console.error('Update error:', itemError);
-                setStatus('Error updating item. Please try again.');
+                console.error('Update error:', itemError.message);
+                setMessage('Error updating item details.');
+                setUploading(false);
                 return;
             }
-
+    
+            // Update the LOCATION table
             const { error: locError } = await supabase
                 .from('LOCATION')
                 .update({ BUILDING: building, ROOM: room ? parseInt(room) : null })
                 .eq('LOCATION_ID', locationId);
-
+    
             if (locError) {
-                console.error('Update error:', locError);
-                setStatus('Error updating location. Please try again.');
+                console.error('Update error:', locError.message);
+                setMessage('Error updating location details.');
+                setUploading(false);
                 return;
             }
-
+    
+            // Update the FOUND_AT table
             const { error: foundAtError } = await supabase
                 .from('FOUND_AT')
                 .update({ DATE: date })
                 .eq('ITEM_ID', ITEM_ID);
-
+    
             if (foundAtError) {
-                console.error('Update error:', foundAtError);
-                setStatus('Error updating lost date.');
+                console.error('Update error:', foundAtError.message);
+                setMessage('Error updating found date.');
+                setUploading(false);
                 return;
             }
-
+    
+            // Insert notification
+            const { error: notifError } = await supabase
+                .from('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Update On Item Received",
+                    DESCRIPTION: `Information on found item, ${name}, was successfully updated`,
+                }]);
+    
+            if (notifError) {
+                console.error('Notification error:', notifError.message);
+                setMessage('Error creating notification.');
+                setUploading(false);
+                return;
+            }
+    
+            // Success message
             setMessage('Item successfully updated.');
-            // Redirect or clear form
             navigate("/LoginPage/ProfileManagement/ViewFoundReportHistory");
         } catch (error) {
             console.error('Error:', error.message);
@@ -174,7 +206,7 @@ function UpdateFoundPage () {
         } finally {
             setUploading(false);
         }
-    };
+    };        
 
     return (
         <div className="found-item-page">

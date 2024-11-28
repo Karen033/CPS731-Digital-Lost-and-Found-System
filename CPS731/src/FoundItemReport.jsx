@@ -130,6 +130,20 @@ function FoundItemPage () {
                 setStatus('Error submitting report.');
                 return;
             }
+
+            const { error: notifError } = await supabase 
+                .from ('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Submitted Item Received",
+                    DESCRIPTION: `Report on found item, ${name}, was successfully created`
+            }]);
+
+            if (notifError) {
+                console.error('Insert error:', notifError);
+                setStatus('Error creating notification');
+                return;
+            }
     
             setMessage('Item successfully registered.');
 

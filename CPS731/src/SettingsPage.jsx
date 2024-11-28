@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import supabase from "./supabaseClient"; // Ensure to import supabase client
+import supabase from "./supabaseClient";
 import './main.css';
 import tmuLogo from './assets/tmu_logo_cropped.png';
 import userIcon from './assets/user_icon.png';

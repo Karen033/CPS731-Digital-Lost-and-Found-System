@@ -22,7 +22,7 @@ html, body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   place-items: center;
 }
 
@@ -100,6 +100,7 @@ a:hover {
   justify-content: space-between;
   font-family: Arial, sans-serif;
   background-color: white;
+  overflow-y: auto;
 }
 
 .logo {
@@ -441,6 +442,7 @@ h1 {
 
 .view-found-page, .view-lost-page {
   height: 100vh;
+  overflow-y: auto;
 }
 
 .lost-item-container, .found-item-container {
