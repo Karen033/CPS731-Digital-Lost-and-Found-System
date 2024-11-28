@@ -8,10 +8,21 @@ import supabase from "./supabaseClient";
 import { Link } from "react-router-dom";
 
 function HomePage() {
+    const [loggedInUser, setLoggedInUser] = useState(null);
     const [items, setItems] = useState([]);
     const [fetchError, setFetchError] = useState(null);
     const navigate = useNavigate();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [unopenedCount, setUnopenedCount] = useState(0);
+
+    // Get logged-in user from localStorage
+    useEffect(() => {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      console.log("Logged in user:", user); // Debugging
+      if (user) {
+          setLoggedInUser(user);
+      }
+  }, []);
 
     // Open confirmation popup
     const handleReportClick = () => {
@@ -44,6 +55,28 @@ function HomePage() {
 
     fetchItems();
   }, []);
+
+  // Fetch unopened notifications count
+  useEffect(() => {
+    if (!loggedInUser) return; // Avoid fetching if user is not set
+
+    const fetchUnopenedNotifications = async () => {
+      const { data, error } = await supabase
+        .from("NOTIFICATIONS")
+        .select("NOTIFICATION_ID", { count: "exact" })
+        .eq("USER_ID", loggedInUser.id)
+        .eq("OPENED", false);
+
+      if (error) {
+        console.error("Error fetching unopened notifications:", error);
+        return;
+      }
+
+      setUnopenedCount(data.length); // Update the count of unopened notifications
+    };
+
+    fetchUnopenedNotifications();
+  }, [loggedInUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedInUser");
@@ -79,9 +112,16 @@ function HomePage() {
                     </div>
                 </div>
                 )}
-                <button className="notification">
-                    <img src={notificationsIcon} />
-                </button>
+                <div className="notification-wrapper">
+                  <button className="notification">
+                    <Link to="/LoginPage/Home/Notifications">
+                      <img src={notificationsIcon} />
+                      {unopenedCount > 0 && (
+                        <span className="notification-badge">{unopenedCount}</span>
+                      )}
+                    </Link>
+                  </button>
+                </div>
                 <button className="profile">
                     <Link to="/LoginPage/ProfileManagement"><img src={profileIcon} /></Link>
                 </button>
