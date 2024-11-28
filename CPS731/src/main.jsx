@@ -15,6 +15,7 @@ import ViewLostReportHistory from './ViewLostReportHistory.jsx';
 import ViewFoundReportHistory from './ViewFoundReportHistory.jsx';
 import UpdateLostPage from './UpdateLostReport.jsx';
 import UpdateFoundPage from './UpdateFoundReport.jsx';
+import SettingsPage from './SettingsPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='/LoginPage/ProfileManagement/ViewLostReportHistory/:item_id/UpdateLostReport' element={<UpdateLostPage />} />
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory" element={<ViewFoundReportHistory />} />
         <Route path="LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
+        <Route path="LoginPage/ProfileManagement/Settings" element={<SettingsPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

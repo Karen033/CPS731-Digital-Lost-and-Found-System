@@ -180,7 +180,9 @@ function UpdateLostPage () {
         <div className="lost-item-page">
             <header>
                 <button className="settings">
-                    <img src={settingsIcon} />
+                    <Link to="/LoginPage/ProfileManagement/Settings">
+                        <img src={settingsIcon} alt="Settings" />
+                    </Link>
                 </button>
                 <h1>Update Lost Item Report</h1>
                 <button className="profile">

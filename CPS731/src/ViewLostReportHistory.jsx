@@ -108,14 +108,16 @@ function ViewLostReportHistory() {
           </button>
         </div>
         <div className="buttons">
-          <button className="settings">
-            <img src={settingIcon} alt="Settings" />
-          </button>
-          <button className="profile">
-            <Link to="/LoginPage/ProfileManagement">
-              <img src={profileIcon} alt="Profile" />
-            </Link>
-          </button>
+            <button className="settings">
+                <Link to="/LoginPage/ProfileManagement/Settings">
+                    <img src={settingIcon} alt="Settings" />
+                </Link>
+            </button>
+            <button className="profile">
+                <Link to="/LoginPage/ProfileManagement">
+                <img src={profileIcon} alt="Profile" />
+                </Link>
+            </button>
         </div>
       </header>
 
