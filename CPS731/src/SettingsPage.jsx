@@ -112,18 +112,26 @@ function SettingsPage () {
         }
     
         try {
-          const { error } = await supabase
-            .from("USERS")
-            .update({ DISPLAY_NAME: newDisplayName })
-            .eq("USER_ID", loggedInUser.id);
-    
-          if (error) {
-            console.error("Update error:", error);
-            setError("Error updating display name. Please try again.");
-          } else {
-            setSuccess("Display name updated successfully!");
-            setIsChangeDisplayNamePopupOpen(false);
-          }
+            const { error } = await supabase
+                .from("USERS")
+                .update({ DISPLAY_NAME: newDisplayName })
+                .eq("USER_ID", loggedInUser.id);
+
+            const { notifError } = await supabase
+                .from("NOTIFICATIONS")
+                .insert({
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Display Name Change Successful",
+                    DESCRIPTION: `Display name has been successfully updated to ${newDisplayName}`
+                })
+        
+            if (error || notifError) {
+                console.error("Update error:", error);
+                setError("Error updating display name. Please try again.");
+            } else {
+                setSuccess("Display name updated successfully!");
+                setIsChangeDisplayNamePopupOpen(false);
+            }
         } catch (err) {
           console.error("Unexpected error during update:", err);
           setError("An unexpected error occurred. Please try again.");
@@ -142,18 +150,26 @@ function SettingsPage () {
         }
     
         try {
-          const { error } = await supabase
-            .from("USERS")
-            .update({ PASSWORD: newPassword })
-            .eq("USER_ID", loggedInUser.id);
-    
-          if (error) {
-            console.error("Update error:", error);
-            setError("Error updating password. Please try again.");
-          } else {
-            setSuccess("Password updated successfully!");
-            setIsChangePasswordPopupOpen(false);
-          }
+            const { error } = await supabase
+                .from("USERS")
+                .update({ PASSWORD: newPassword })
+                .eq("USER_ID", loggedInUser.id);
+
+            const { notifError } = await supabase
+                .from("NOTIFICATIONS")
+                .insert({
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Password Change Successful",
+                    DESCRIPTION: "Password has been successfully updated"
+                })
+        
+            if (error || notifError) {
+                console.error("Update error:", error);
+                setError("Error updating password. Please try again.");
+            } else {
+                setSuccess("Password updated successfully!");
+                setIsChangePasswordPopupOpen(false);
+            }
         } catch (err) {
           console.error("Unexpected error during update:", err);
           setError("An unexpected error occurred. Please try again.");
