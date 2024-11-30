@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./main.css";
 import tmuLogo from "./assets/tmu_logo_cropped.png";
+import search_icon from "./assets/search_icon.png";
 import notificationsIcon from "./assets/notification_icon.png";
 import profileIcon from "./assets/user_icon.png";
 import supabase from "./supabaseClient";
@@ -57,13 +58,33 @@ function HomePage() {
             <div>
                 <img src={tmuLogo} className="header_logo" />
             </div>
-            <div>
-                <input 
-                className="search"
-                type="text"
-                placeholder="search"
-                />
-            </div>
+            <div style={{ position: "relative", display: "inline-block" }}>
+  <input
+    className="search"
+    type="text"
+    placeholder="search"
+    style={{
+      paddingRight: "30px", // Add space for the icon
+      width: "400px", // Adjust width as needed
+      height: "30px", // Adjust height as needed
+    }}
+  />
+  <img
+    src={search_icon}
+    className="search_icon"
+    alt="search"
+    style={{
+      position: "absolute",
+      right: "10px", // Adjust spacing
+      top: "50%",
+      transform: "translateY(-50%)", // Center vertically
+      width: "20px",
+      height: "20px",
+      pointerEvents: "none", // Ensure the icon doesn't interfere with input clicks
+    }}
+  />
+</div>
+
             <div className="buttons">
                 <button className="report" onClick={handleReportClick}>Report Item</button>
                 {isPopupOpen && (
