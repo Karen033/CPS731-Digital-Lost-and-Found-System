@@ -605,3 +605,53 @@ h1 {
   min-width: 20px;
   text-align: center;
 }
+
+.verify-items {
+  background-color: #BFE9FF;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.verify-container-box {
+  background-color: white;
+  width: 80%;
+  padding: 20px; 
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 8px;
+}
+
+.verify-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  margin-left: 0;
+}
+
+.verify-info-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%
+}
+
+.verify-item-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.found-by, .claimed-by {
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: #555; /* Gray color for these texts */
+}
+
+.claimed-by {
+  margin-top: 5px; /* Adds space between 'Found by' and 'Claimed by' */
+}
