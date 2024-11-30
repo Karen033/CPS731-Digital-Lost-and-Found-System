@@ -50,22 +50,31 @@ function LoginPage() {
         .select("USER_ID, EMAIL, USER_NAME, FIRST_NAME, LAST_NAME, PASSWORD, DISPLAY_NAME, ACCOUNT_TYPE")
         .eq("USER_NAME", username.trim())
         .eq("PASSWORD", password.trim())
-        .single();
 
       if (error) {
         console.error("Supabase error:", error);
         setError("Invalid username or password. Please try again.");
-      } else if (!data) {
+        alert("Invalid username or password. Please try again.");
+        return;
+      } else if (!data || data.length === 0) {
         console.log("No user found with the given credentials.");
         setError("Invalid username or password. Please try again.");
+        alert("Invalid username or password. Please try again.");
+        return;
       } else {
+        const user = data[0];
         console.log("Login successful:", data);
         setError("");
 
         // Store the logged-in user's information in localStorage
         localStorage.setItem(
           "loggedInUser",
-          JSON.stringify({ id: data.USER_ID, displayName: data.DISPLAY_NAME, email: data.EMAIL, accountType: data.ACCOUNT_TYPE })
+          JSON.stringify({
+            id: user.USER_ID,
+            displayName: user.DISPLAY_NAME,
+            email: user.EMAIL,
+            accountType: user.ACCOUNT_TYPE,
+          })
         );
 
         // Navigate to the homepage

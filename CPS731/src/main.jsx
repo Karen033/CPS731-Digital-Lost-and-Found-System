@@ -15,6 +15,8 @@ import ViewLostReportHistory from './ViewLostReportHistory.jsx';
 import ViewFoundReportHistory from './ViewFoundReportHistory.jsx';
 import UpdateLostPage from './UpdateLostReport.jsx';
 import UpdateFoundPage from './UpdateFoundReport.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import NotificationsPage from './NotificationsPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -25,13 +27,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/LoginPage/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/LoginPage/Home" element={<HomePage />} />
+        <Route path="/LoginPage/Home/Notifications" element={<NotificationsPage />} />
         <Route path="/LoginPage/LostItemReport" element={<LostItemReport />} />
         <Route path="/LoginPage/FoundItemReport" element={<FoundItemReport />} />
         <Route path="/LoginPage/ProfileManagement" element={<ProfileManagement />} />
         <Route path="/LoginPage/ProfileManagement/ViewLostReportHistory" element={<ViewLostReportHistory />} />
         <Route path='/LoginPage/ProfileManagement/ViewLostReportHistory/:item_id/UpdateLostReport' element={<UpdateLostPage />} />
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory" element={<ViewFoundReportHistory />} />
-        <Route path="LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
+        <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
+        <Route path="/LoginPage/ProfileManagement/Settings" element={<SettingsPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -118,6 +118,13 @@ function UpdateLostPage () {
         setUploading(true);
         try {
             let fileName = null;
+
+            // Prepare the update payload for the ITEM table
+            const itemUpdatePayload = {
+                NAME: name,
+                DESCRIPTION: description,
+            };
+
             if (file) {
                 const sanitizedFileName = `${Date.now()}-${sanitizeFileName(file.name)}`;
                 const { error: uploadError } = await supabase.storage
@@ -130,11 +137,12 @@ function UpdateLostPage () {
                     return;
                 }
                 fileName = sanitizedFileName;
+                itemUpdatePayload.IMAGE_URL = fileName;
             }
 
             const { error: itemError } = await supabase
                 .from('ITEM')
-                .update({ NAME: name, DESCRIPTION: description, IMAGE_URL: fileName || null })
+                .update(itemUpdatePayload)
                 .eq('ITEM_ID', ITEM_ID);
 
             if (itemError) {
@@ -165,6 +173,20 @@ function UpdateLostPage () {
                 return;
             }
 
+            const { error: notifError } = await supabase 
+                .from ('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Update On Item Received",
+                    DESCRIPTION: `Information on lost item, ${name}, was successfully updated`
+            }]);
+
+            if (notifError) {
+                console.error('Insert error:', notifError);
+                setStatus('Error creating notification');
+                return;
+            }
+
             setMessage('Item successfully updated.');
             // Redirect or clear form
             navigate("/LoginPage/ProfileManagement/ViewLostReportHistory");
@@ -180,7 +202,9 @@ function UpdateLostPage () {
         <div className="lost-item-page">
             <header>
                 <button className="settings">
-                    <img src={settingsIcon} />
+                    <Link to="/LoginPage/ProfileManagement/Settings">
+                        <img src={settingsIcon} alt="Settings" />
+                    </Link>
                 </button>
                 <h1>Update Lost Item Report</h1>
                 <button className="profile">

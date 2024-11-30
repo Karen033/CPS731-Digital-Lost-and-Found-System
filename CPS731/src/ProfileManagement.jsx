@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import supabase from "./supabaseClient"; // Ensure to import supabase client
+import supabase from "./supabaseClient"; 
 import './main.css';
 import tmuLogo from './assets/tmu_logo_cropped.png';
 import userProfile from './assets/user.png';
@@ -10,14 +10,20 @@ function ProfileManagement() {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [userDetails, setUserDetails] = useState(null); // State to hold user details
     const [fetchError, setFetchError] = useState(null); // State for any fetch error
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State for managing the popup
+    const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false); // State for managing the popup
+    const [isNotifSettingPopupOpen, setIsNotifSettingPopupOpen] = useState(false);
 
     const handleInformation = () => {
-        setIsPopupOpen(true);
+        setIsDetailsPopupOpen(true);
     };
 
+    const handleNotifSetting = () => {
+        setIsNotifSettingPopupOpen(true);
+    }
+
     const handleClose = () => {
-        setIsPopupOpen(false);
+        setIsDetailsPopupOpen(false);
+        setIsNotifSettingPopupOpen(false);
     };
 
     // Get logged-in user from localStorage
@@ -72,7 +78,9 @@ function ProfileManagement() {
                 </div>
                 <div className="buttons">
                     <button className="setting">
-                        <img src={settingsIcon} alt="Settings" />
+                        <Link to="/LoginPage/ProfileManagement/Settings">
+                            <img src={settingsIcon} alt="Settings" />
+                        </Link>
                     </button>
                 </div>
             </header>
@@ -89,7 +97,7 @@ function ProfileManagement() {
                 <button>University Id: {userDetails?.USER_ID || "Not Found"}</button>
                 <button>University Email: {userDetails?.EMAIL || "Not Found"}</button>
                 <button onClick={handleInformation}>Personal Information</button>
-                {isPopupOpen && (
+                {isDetailsPopupOpen && (
                     <div className="overlay">
                         <div className="popup">
                             <h2>Display Name: {userDetails.DISPLAY_NAME}</h2>
@@ -105,8 +113,18 @@ function ProfileManagement() {
                 <button>
                     <Link to="/LoginPage/ProfileManagement/ViewLostReportHistory">User Lost and Found Reports</Link>
                 </button>
-                <button>Notification Settings</button>
-                <button>Settings and Preferences</button>
+                <button onClick={handleNotifSetting}>Notification Settings</button>
+                {isNotifSettingPopupOpen && (
+                    <div className="overlay">
+                        <div className="popup">
+                            <h2>TO BE IMPLEMENTED IN THE FUTURE</h2>
+                            <button onClick={handleClose} className="report">Close</button>
+                        </div>
+                    </div>
+                )}
+                <button>
+                    <Link to="/LoginPage/ProfileManagement/Settings">Settings and Preferences</Link>
+                </button>
             </div>
 
             {/* Show error message if there's an issue fetching data */}
