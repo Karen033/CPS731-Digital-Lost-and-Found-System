@@ -1,88 +1,186 @@
-import React, { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-import "./main.css";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import supabase from "./supabaseClient";
 
-// Initialize Supabase client
-const supabase = createClient("https://npuneojjiqzybvnjnfsv.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wdW5lb2pqaXF6eWJ2bmpuZnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIwNDIwNDgsImV4cCI6MjA0NzYxODA0OH0.lDJb8FvMrcRAzHtFR1QvRFWcZp3FcQWzoYcBJ1VdnoU");
+function ItemMatchPage() {
+    
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [match, setMatch] = useState(null);
+    const [error, setError] = useState(null);
+    const [loggedInUser, setLoggedInUser] = useState(null);
 
-const ItemMatchPage = () => {
-  const [match, setMatch] = useState(null); // Store a single match
-  const [loading, setLoading] = useState(true);
 
-  // Fetch match data from Supabase
-  useEffect(() => {
-    const fetchMatch = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("matches") // Replace with your Supabase table name
-          .select("*")
-          .limit(1); // Fetch only one item match for simplicity
-
-        if (error) throw error;
-
-        if (data.length > 0) {
-          setMatch(data[0]); // Set the first match
+    const { lostItemName, lostItemDescription } = location.state || {};
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (user) {
+            setLoggedInUser(user);
         }
-      } catch (error) {
-        console.error("Error fetching match data:", error.message);
-      } finally {
-        setLoading(false);
-      }
+    }, []);
+
+    useEffect(() => {
+        if (!lostItemName || !lostItemDescription) {
+            setError("Lost item information is missing.");
+            return;
+        }
+
+
+        const fetchMatch = async () => {
+            try {
+                const { data: itemData, error: itemError } = await supabase
+            .from("ITEM")
+            .select("ITEM_ID, NAME, DESCRIPTION, IMAGE_URL, STATUS")
+            .eq("NAME", lostItemName)
+            .eq("DESCRIPTION", lostItemDescription)
+            .eq("STATUS", "FOUND") // Ensure the status is "FOUND"
+            .single();
+
+        if (itemError || !itemData) {
+            console.error("Error fetching item:", itemError);
+            setError("No matching item found.");
+            return;
+        }
+
+        const { ITEM_ID } = itemData;
+
+        // Step 2: Fetch the location and date details using ITEM_ID
+        const { data: foundAtData, error: foundAtError } = await supabase
+            .from("FOUND_AT")
+            .select("DATE, LOCATION_ID")
+            .eq("ITEM_ID", ITEM_ID)
+            .single();
+
+        if (foundAtError || !foundAtData) {
+            console.error("Error fetching found_at details:", foundAtError);
+            setError("No location or date information available.");
+            return;
+        }
+
+        const { DATE, LOCATION_ID } = foundAtData;
+
+        // Step 3: Fetch building and room details using LOCATION_ID
+        const { data: locationData, error: locationError } = await supabase
+            .from("LOCATION")
+            .select("BUILDING, ROOM")
+            .eq("LOCATION_ID", LOCATION_ID)
+            .single();
+
+        if (locationError || !locationData) {
+            console.error("Error fetching location details:", locationError);
+            setError("No building or room information available.");
+            return;
+        }
+
+        // Combine all fetched data into one object
+        const itemDetails = {
+            ITEM_ID,
+            name: itemData.NAME,
+            description: itemData.DESCRIPTION,
+            imageUrl: itemData.IMAGE_URL,
+            date: DATE,
+            building: locationData.BUILDING,
+            room: locationData.ROOM,
+        };
+
+        setMatch(itemDetails);
+            } catch (error) {
+                console.error("Unexpected error:", error);
+                setError("An unexpected error occurred.");
+            }
+        };
+
+        fetchMatch();
+    }, [lostItemName, lostItemDescription]);
+    
+
+    const handleBack = () => {
+        navigate("/LoginPage/Home");
     };
 
-    fetchMatch();
-  }, []);
+    const handleYes = async() => {
+        if (!loggedInUser) {
+            console.error("User not logged in.");
+            alert("You need to log in to claim items.");
+            return;
+        }
+        try {
+            // Insert the claim into the CLAIMED table
+            const { data, error } = await supabase
+                .from("CLAIMED")
+                .insert({
+                    ITEM_ID: match.ITEM_ID,
+                    CLAIMANT_ID: loggedInUser.id,
+                });
 
-  const handleYesClick = () => {
-    alert("You selected 'Yes'! Proceeding to contact the reporter...");
-    // Add additional logic, such as marking the item as claimed
-  };
+            const { error: notifError } = await supabase 
+                .from ('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Item Claim Received",
+                    DESCRIPTION: `Item, ${itemData.name}, was successfully received`
+            }]);
+    
+            if (error || notifError) {
+                console.error("Error claiming item:", error);
+                alert("An error occurred while claiming the item. Please try again.");
+            } else {
+                console.log("Item claimed successfully:", data);
+                alert(`You have successfully claimed the item: ${match.name}`);
+                navigate("/LoginPage/Home");
+            }
+        } catch (error) {
+            console.error("Unexpected error while claiming item:", error);
+            alert("An unexpected error occurred. Please try again.");
+        }
+        
+         // Redirect after confirmation
+    };
 
-  const handleNoClick = () => {
-    alert("You selected 'No'. Searching for other matches...");
-    // Add additional logic, such as fetching another match
-  };
+    const handleNo = () => {
+        alert("Sorry to hear that. You can try searching for more items.");
+        navigate("/LoginPage/Home"); // Redirect after rejection
+    };
 
-  if (loading) {
-    return <div className="loading">Loading match...</div>;
-  }
 
-  if (!match) {
-    return <div className="no-match">No matches found at the moment.</div>;
-  }
-
-  return (
-    <div className="item-match-page">
-      <header className="header">
-        <button className="back-button">←</button>
-        <h1>Item Match Page</h1>
-        <button className="settings-button">⚙️</button>
-      </header>
-      <div className="item-content">
-        <h2>Is This Your Item?</h2>
-        <div className="item-card">
-          <img
-            src={match.image_url || "/placeholder.png"} // Fallback image
-            alt={match.name}
-            className="item-image"
-          />
-          <div className="item-info">
-            <h3>{match.name}</h3>
-            <p className="item-category">{match.category || "Uncategorized"}</p>
-            <p className="item-description">{match.description}</p>
-          </div>
+    return (
+        <div>
+            <header>
+                <button onClick={handleBack}>← Back</button>
+            </header>
+            {error ? (
+                <div>
+                    <p>{error}</p>
+                    <button onClick={handleBack}>Back to Home</button>
+                </div>
+            ) : match ? (
+                <div>
+                    <h2>Is This Your Item?</h2>
+                    <div key={match.ITEM_ID}>
+                        {match.imageUrl && (
+                            <img
+                            src={`https://npuneojjiqzybvnjnfsv.supabase.co/storage/v1/object/public/items/${match.imageUrl}`}
+                            alt={match.NAME}
+                            style={{ width: "300px", height: "300px", objectFit: "cover" }}
+                        />
+                        )}
+                        <div>
+                            <p><strong>Name: </strong>{match.name}</p>
+                            <p><strong>Description: </strong>{match.description}</p>
+                            <p><strong>Location: </strong>{match.building} {match.room ? `, Room ${match.room}` : ""}</p>
+                            <p><strong>Date:</strong> {new Date(match.date).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button onClick={handleYes}>Yes</button>
+                        <button onClick={handleNo}>No</button>
+                    </div>
+                </div>
+            ) : (
+                <p>Checking for matches...</p>
+            )}
         </div>
-        <div className="action-buttons">
-          <button className="yes-button" onClick={handleYesClick}>
-            Yes
-          </button>
-          <button className="no-button" onClick={handleNoClick}>
-            No
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+    );
+}
 
 export default ItemMatchPage;
