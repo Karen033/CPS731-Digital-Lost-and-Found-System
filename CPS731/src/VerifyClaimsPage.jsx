@@ -20,13 +20,14 @@ function VerifyClaimsPage() {
         }
     }, [navigate]);
 
-    // Fetch claims data from CLAIMED table
+    // Fetch claims data from CLAIMED table (only Pending initially)
     useEffect(() => {
         const fetchClaims = async () => {
             try {
                 const { data, error } = await supabase
                     .from('CLAIMED')
-                    .select('CLAIM_ID, STATUS, ITEM_ID, CLAIMANT_ID');
+                    .select('CLAIM_ID, STATUS, ITEM_ID, CLAIMANT_ID')
+                    .eq('STATUS', 'Pending'); // Filter only Pending claims
 
                 if (error) {
                     setFetchError('Could not fetch claims.');
@@ -58,7 +59,8 @@ function VerifyClaimsPage() {
                 // Re-fetch claims to update the status on the page
                 const { data } = await supabase
                     .from('CLAIMED')
-                    .select('CLAIM_ID, STATUS, ITEM_ID, CLAIMANT_ID');
+                    .select('CLAIM_ID, STATUS, ITEM_ID, CLAIMANT_ID')
+                    .eq('STATUS', 'Pending'); // Only Pending claims
                 setClaims(data);
             }
         } catch (error) {
@@ -66,12 +68,28 @@ function VerifyClaimsPage() {
         }
     };
 
+    // Navigate to the Previously Verified Claims page
+    const handleViewVerifiedClaims = () => {
+        navigate('/LoginPage/VerifiedClaimsPage'); // Redirect to Verified Claims page
+    };
+
+    // Navigate to the homepage
+    const handleBackToHomepage = () => {
+        navigate('/LoginPage/Home'); // Redirect to homepage
+    };
+
     return (
         <div className="verify-claims-container">
             <h1>Verify Claims</h1>
+            <button onClick={handleBackToHomepage}>Back to Homepage</button>
+            <button onClick={handleViewVerifiedClaims}>Previously Verified Claims</button>
             {fetchError ? (
                 <div className="error-message">
                     <p>{fetchError}</p>
+                </div>
+            ) : claims.length === 0 ? (
+                <div className="no-pending-message">
+                    <p>Hoorayyy! No Pending Claims.</p>
                 </div>
             ) : (
                 <table className="claims-table">
