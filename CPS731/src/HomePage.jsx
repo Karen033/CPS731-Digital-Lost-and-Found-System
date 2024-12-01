@@ -258,6 +258,13 @@ function HomePage() {
                     <button className="logout-button" onClick={handleLogout}>
                         Logout
                     </button>
+
+                    {/* Admin-only Verify Claims Button */}
+                    {accountType === "Admin" && (
+                        <button className="verify-claims-button">
+                            Verify Claims
+                        </button>
+                     )}
                 </div>
             </header>
 

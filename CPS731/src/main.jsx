@@ -18,6 +18,7 @@ import UpdateFoundPage from './UpdateFoundReport.jsx';
 import SettingsPage from './SettingsPage.jsx';
 import NotificationsPage from './NotificationsPage.jsx';
 import ItemPageMatch from './ItemPageMatch.jsx';
+import VerifyClaimsPage from './VerifyClaimsPage.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -38,6 +39,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
         <Route path="/LoginPage/ProfileManagement/Settings" element={<SettingsPage />} />
         <Route path="/LoginPage/Home/ItemPageMatch" element={<ItemPageMatch />} />
+        <Route path="/LoginPage/VerifyClaims" element={ localStorage.getItem('loggedInUser') && JSON.parse(localStorage.getItem('loggedInUser')).accountType === 'admin' ? (<VerifyClaimsPage /> ) : (<p>You do not have permission to view this page.</p>)
+  }
+/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
