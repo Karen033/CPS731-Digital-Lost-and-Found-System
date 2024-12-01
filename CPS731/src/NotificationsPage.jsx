@@ -12,6 +12,8 @@ function NotificationsPage() {
     const [older, setOlder] = useState([]);
     const [selectedNotification, setSelectedNotification] = useState(null);
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // Get logged-in user from localStorage
     useEffect(() => {
@@ -66,12 +68,17 @@ function NotificationsPage() {
     
             if (error) {
                 console.error('Error fetching notifications:', error.message);
+                setError("Failed to fetch notifications.");
+                setLoading(false);
                 return [];
             }
     
+            setLoading(false);
             return notifications;
         } catch (error) {
             console.error('Unexpected error:', error.message);
+            setError("An unexpected error occurred.");
+            setLoading(false);
             return [];
         }
     };    
@@ -142,6 +149,7 @@ function NotificationsPage() {
         const fetchAndGroupNotifications = async () => {
             if (!loggedInUser) return; // Ensure loggedInUser is available
     
+            setLoading(true);
             const notifications = await fetchNotifications();
             const grouped = groupNotifications(notifications);
             setThisWeek(grouped.thisWeek);
@@ -150,7 +158,6 @@ function NotificationsPage() {
     
         fetchAndGroupNotifications();
     }, [loggedInUser]); // Add loggedInUser as a dependency
-    
 
     return (
         <div className="notifications-page">
@@ -178,41 +185,57 @@ function NotificationsPage() {
                 </div>
             </header>
             <div className="notif-container">
-                <div className="this-week">
-                    <h2>This Week</h2>
-                    <ul>
-                        {thisWeek.map(notification => (
-                            <li 
-                                key={notification.NOTIFICATION_ID} 
-                                className={notification.OPENED ? 'notification-opened' : 'notification-unopened'}
-                            >
-                                <strong>{notification.TITLE}</strong><br />
-                                <em>{notification.timeAgo}</em><br />
-                                <button onClick={() => { setSelectedNotification(notification); markAsOpened(notification); }}>
-                                    View
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {loading ? (
+                    <div>Loading...</div>
+                ) : error ? (
+                    <div>{error}</div>
+                ) : (
+                    <>
+                        <div className="this-week">
+                            <h2>This Week</h2>
+                            {thisWeek.length === 0 ? (
+                                <p>No notifications this week.</p>
+                            ) : (
+                                <ul>
+                                    {thisWeek.map(notification => (
+                                        <li 
+                                            key={notification.NOTIFICATION_ID} 
+                                            className={notification.OPENED ? 'notification-opened' : 'notification-unopened'}
+                                        >
+                                            <strong>{notification.TITLE}</strong><br />
+                                            <em>{notification.timeAgo}</em><br />
+                                            <button onClick={() => { setSelectedNotification(notification); markAsOpened(notification); }}>
+                                                View
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
 
-                <div className="older">
-                    <h2>Older</h2>
-                    <ul>
-                        {older.map(notification => (
-                            <li 
-                                key={notification.NOTIFICATION_ID} 
-                                className={notification.OPENED ? 'notification-opened' : 'notification-unopened'}
-                            >
-                                <strong>{notification.TITLE}</strong><br />
-                                <em>{notification.timeAgo}</em><br />
-                                <button onClick={() => { setSelectedNotification(notification); markAsOpened(notification); }}>
-                                    View
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                        <div className="older">
+                            <h2>Older</h2>
+                            {older.length === 0 ? (
+                                <p>No older notifications.</p>
+                            ) : (
+                                <ul>
+                                    {older.map(notification => (
+                                        <li 
+                                            key={notification.NOTIFICATION_ID} 
+                                            className={notification.OPENED ? 'notification-opened' : 'notification-unopened'}
+                                        >
+                                            <strong>{notification.TITLE}</strong><br />
+                                            <em>{notification.timeAgo}</em><br />
+                                            <button onClick={() => { setSelectedNotification(notification); markAsOpened(notification); }}>
+                                                View
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
 
             {selectedNotification && (
