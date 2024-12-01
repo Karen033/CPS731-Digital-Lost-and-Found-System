@@ -46,14 +46,22 @@ function VerifyClaimsPage() {
     }, []);
 
     // Handle Approve/Reject
-    const handleStatusChange = async (claimId, status) => {
+    const handleStatusChange = async (claimantId, claimId, status) => {
         try {
             const { error } = await supabase
                 .from('CLAIMED')
                 .update({ STATUS: status })
                 .eq('CLAIM_ID', claimId);
 
-            if (error) {
+            const { error: notifError } = await supabase 
+                .from ('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: claimantId,
+                    TITLE: "Claim status has changed",
+                    DESCRIPTION: `Claim on an item has been ${status}`
+            }]);
+
+            if (error || notifError) {
                 console.error('Error updating status:', error);
             } else {
                 // Re-fetch claims to update the status on the page
@@ -112,14 +120,14 @@ function VerifyClaimsPage() {
                                 <td>
                                     <button
                                         onClick={() =>
-                                            handleStatusChange(claim.CLAIM_ID, 'Approved')
+                                            handleStatusChange(claim.CLAIMANT_ID, claim.CLAIM_ID, 'Approved')
                                         }
                                     >
                                         Approve
                                     </button>
                                     <button
                                         onClick={() =>
-                                            handleStatusChange(claim.CLAIM_ID, 'Rejected')
+                                            handleStatusChange(claim.CLAIMANT_ID, claim.CLAIM_ID, 'Rejected')
                                         }
                                     >
                                         Reject
