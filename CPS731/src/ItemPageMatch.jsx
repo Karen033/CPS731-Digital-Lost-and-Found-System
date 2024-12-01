@@ -74,6 +74,7 @@ function ItemMatchPage() {
 
         // Combine all fetched data into one object
         const itemDetails = {
+            ITEM_ID,
             name: itemData.NAME,
             description: itemData.DESCRIPTION,
             imageUrl: itemData.IMAGE_URL,
@@ -97,7 +98,7 @@ function ItemMatchPage() {
         navigate("/LoginPage/Home");
     };
 
-    const handleYes = async(itemData) => {
+    const handleYes = async() => {
         if (!loggedInUser) {
             console.error("User not logged in.");
             alert("You need to log in to claim items.");
@@ -108,7 +109,7 @@ function ItemMatchPage() {
             const { data, error } = await supabase
                 .from("CLAIMED")
                 .insert({
-                    ITEM_ID: itemData.ITEM_ID,
+                    ITEM_ID: match.ITEM_ID,
                     CLAIMANT_ID: loggedInUser.id,
                 });
     
@@ -117,14 +118,15 @@ function ItemMatchPage() {
                 alert("An error occurred while claiming the item. Please try again.");
             } else {
                 console.log("Item claimed successfully:", data);
-                alert(`You have successfully claimed the item: ${item.NAME}`);
+                alert(`You have successfully claimed the item: ${match.name}`);
+                navigate("/LoginPage/Home");
             }
         } catch (error) {
             console.error("Unexpected error while claiming item:", error);
             alert("An unexpected error occurred. Please try again.");
         }
-        alert("You have confirmed the item.");
-        navigate("/LoginPage/Home"); // Redirect after confirmation
+        
+         // Redirect after confirmation
     };
 
     const handleNo = () => {
