@@ -37,7 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory" element={<ViewFoundReportHistory />} />
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
         <Route path="/LoginPage/ProfileManagement/Settings" element={<SettingsPage />} />
-        <Route path="/LoginPage/LostItemReport/ItemPageMatch" element={<ItemPageMatch />} />
+        <Route path="/LoginPage/Home/ItemPageMatch" element={<ItemPageMatch />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

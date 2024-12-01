@@ -24,8 +24,49 @@ function HomePage() {
         if (user) {
             setLoggedInUser(user);
             fetchAccountType(user.id);
+            performMatchCheck(user.id)
         }
     }, []);
+    const performMatchCheck = async (userId) => {
+      try {
+          // Fetch the user's lost items
+          const { data: lostItems, error: lostError } = await supabase
+              .from("ITEM")
+              .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
+              .eq("STATUS", "LOST")
+              .eq("USER_ID", userId);
+
+          if (lostError) {
+              console.error("Error fetching lost items:", lostError);
+              return;
+          }
+
+          // Iterate over the user's lost items to find matches
+          for (const lostItem of lostItems) {
+              const { data: matchingItems, error: matchError } = await supabase
+                  .from("ITEM")
+                  .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
+                  .eq("STATUS", "FOUND")
+                  .ilike("NAME", `%${lostItem.NAME}%`)
+                  .ilike("DESCRIPTION", `%${lostItem.DESCRIPTION}%`)
+                  .eq("LOCATION_ID", lostItem.LOCATION_ID);
+
+              if (matchError) {
+                  console.error("Error fetching matching items:", matchError);
+                  return;
+              }
+
+              if (matchingItems && matchingItems.length > 0) {
+                  // Navigate to the match page with matching items
+                  navigate("/LoginPage/Home/ItemPageMatch", { state: { matches: matchingItems } });
+                  return; // Stop further checks once a match is found
+              }
+          }
+      } catch (error) {
+          console.error("Unexpected error during match checking:", error);
+      }
+  };
+
 
     // Fetch account type (Student/Admin) from USERS table
     const fetchAccountType = async (userId) => {
@@ -46,7 +87,7 @@ function HomePage() {
             console.error("Error fetching account type:", error);
         }
     };
-
+   
     // Open confirmation popup
     const handleReportClick = () => {
         setIsPopupOpen(true);
@@ -156,6 +197,8 @@ function HomePage() {
         item.NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.DESCRIPTION.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+
 
     return (
         <div className="home-page">
