@@ -365,6 +365,12 @@ h1 {
   color: #252525;
   margin-bottom: 10px;
 }
+.popup textarea {
+  background-color: #BFE9FF;
+  color: #252525;
+  margin-bottom: 10px;
+}
+
 
 .popup h2, .popup h4, .popup p {
   margin: 5px;
