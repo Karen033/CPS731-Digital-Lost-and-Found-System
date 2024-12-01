@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import "./main.css";
+import './main.css';
 
 function VerifyClaimsPage() {
     const [claims, setClaims] = useState([]);
@@ -44,6 +44,28 @@ function VerifyClaimsPage() {
         fetchClaims();
     }, []);
 
+    // Handle Approve/Reject
+    const handleStatusChange = async (claimId, status) => {
+        try {
+            const { error } = await supabase
+                .from('CLAIMED')
+                .update({ STATUS: status })
+                .eq('CLAIM_ID', claimId);
+
+            if (error) {
+                console.error('Error updating status:', error);
+            } else {
+                // Re-fetch claims to update the status on the page
+                const { data } = await supabase
+                    .from('CLAIMED')
+                    .select('CLAIM_ID, STATUS, ITEM_ID, CLAIMANT_ID');
+                setClaims(data);
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
+    };
+
     return (
         <div className="verify-claims-container">
             <h1>Verify Claims</h1>
@@ -59,6 +81,7 @@ function VerifyClaimsPage() {
                             <th>Status</th>
                             <th>Item ID</th>
                             <th>Claimant ID</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +91,22 @@ function VerifyClaimsPage() {
                                 <td>{claim.STATUS}</td>
                                 <td>{claim.ITEM_ID}</td>
                                 <td>{claim.CLAIMANT_ID}</td>
+                                <td>
+                                    <button
+                                        onClick={() =>
+                                            handleStatusChange(claim.CLAIM_ID, 'Approved')
+                                        }
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            handleStatusChange(claim.CLAIM_ID, 'Rejected')
+                                        }
+                                    >
+                                        Reject
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
