@@ -182,7 +182,7 @@ function LostItemPage () {
                 <h3>Name of the item lost:</h3>
                 <input
                     type="text"
-                    placeholder="Input String"
+                    placeholder="Enter name of your item"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
@@ -191,7 +191,7 @@ function LostItemPage () {
                 <h3>Description of the item:</h3>
                 <input
                     type="text"
-                    placeholder="Input String"
+                    placeholder="Key details for identification"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
@@ -200,7 +200,7 @@ function LostItemPage () {
                 <h3>Building the item was lost in:</h3>
                 <input
                     type="text"
-                    placeholder="Input String"
+                    placeholder="Enter name in 3 letters. For example 'SLC'"
                     value={building}
                     onChange={(e) => setBuilding(e.target.value)}
                 />
@@ -209,7 +209,7 @@ function LostItemPage () {
                 <h3>Room# if applicable:</h3>
                 <input
                     type="number"
-                    placeholder="Input Number"
+                    placeholder="Enter Room Number"
                     value={room}
                     onChange={(e) => setRoom(e.target.value)}
                 />
