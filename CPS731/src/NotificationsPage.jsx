@@ -25,11 +25,13 @@ function NotificationsPage() {
     }, []);
 
     // Function to format time ago
-    const formatTimeAgo = (date) => {
-        if (!(date instanceof Date) || isNaN(date.getTime())) {
+    const formatTimeAgo = (timestamp) => {
+        // Ensure timestamp is a valid Date object
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) {
             return "Invalid date";
         }
-
+    
         const now = new Date();
         const timeDiff = now - date;
         const seconds = Math.floor(timeDiff / 1000);
@@ -38,20 +40,20 @@ function NotificationsPage() {
         const days = Math.floor(hours / 24);
         const weeks = Math.floor(days / 7);
         const months = Math.floor(days / 30);
-
+    
         if (days < 1) {
             if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
             if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
             return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
         }
-
+    
         if (months > 0) return `${months} month${months > 1 ? 's' : ''} ago`;
         if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
         if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-
+    
         return "Just now";
     };
-
+    
     // Fetch notifications from Supabase for the logged-in user
     const fetchNotifications = async () => {
         if (!loggedInUser) {
@@ -88,28 +90,28 @@ function NotificationsPage() {
         const now = new Date();
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(now.getDate() - 7);
-
+    
         const thisWeek = [];
         const older = [];
-
+    
         notifications.forEach(notification => {
-            const createdAt = new Date(notification.CREATED_AT);
+            const createdAt = new Date(notification.CREATED_AT); // Ensure this is a valid Date object
             if (isNaN(createdAt.getTime())) {
                 notification.timeAgo = "Invalid date";
                 older.push(notification);
                 return;
             }
-
-            notification.timeAgo = formatTimeAgo(createdAt);
+    
+            notification.timeAgo = formatTimeAgo(createdAt); // Ensure this is passed as a Date object
             if (createdAt >= oneWeekAgo) {
                 thisWeek.push(notification);
             } else {
                 older.push(notification);
             }
         });
-
+    
         return { thisWeek, older };
-    };
+    };    
 
     // Mark notification as opened
     const markAsOpened = async (notification) => {
