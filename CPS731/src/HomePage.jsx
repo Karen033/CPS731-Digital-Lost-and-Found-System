@@ -290,9 +290,11 @@ function HomePage() {
 
                     {/* Admin-only Verify Claims Button */}
                     {accountType === "Admin" && (
-                        <button className="verify-claims-button">
-                            Verify Claims
-                        </button>
+                        <Link to="/LoginPage/VerifyClaimsPage">
+                            <button className="verify-claims-button">
+                                Verify Claims
+                            </button>
+                        </Link>
                      )}
                 </div>
             </header>
