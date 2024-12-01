@@ -111,8 +111,16 @@ function ItemMatchPage() {
                     ITEM_ID: itemData.ITEM_ID,
                     CLAIMANT_ID: loggedInUser.id,
                 });
+
+            const { error: notifError } = await supabase 
+                .from ('NOTIFICATIONS')
+                .insert([{
+                    USER_ID: loggedInUser.id,
+                    TITLE: "Item Claim Received",
+                    DESCRIPTION: `Item, ${itemData.name}, was successfully received`
+            }]);
     
-            if (error) {
+            if (error || notifError) {
                 console.error("Error claiming item:", error);
                 alert("An error occurred while claiming the item. Please try again.");
             } else {

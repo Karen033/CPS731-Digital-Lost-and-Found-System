@@ -208,7 +208,15 @@ const handleClaim = async (item) => {
               CLAIMANT_ID: loggedInUser.id,
           });
 
-      if (error) {
+        const { error: notifError } = await supabase 
+          .from ('NOTIFICATIONS')
+          .insert([{
+              USER_ID: loggedInUser.id,
+              TITLE: "Item Claim Received",
+              DESCRIPTION: `Item, ${item.name}, was successfully received`
+      }]);
+
+      if (error || notifError) {
           console.error("Error claiming item:", error);
           alert("An error occurred while claiming the item. Please try again.");
       } else {
