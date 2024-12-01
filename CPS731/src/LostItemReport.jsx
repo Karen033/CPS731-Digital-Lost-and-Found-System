@@ -146,6 +146,7 @@ function LostItemPage () {
             }
     
             setMessage('Item successfully registered.');
+            navigate('/LoginPage/Home')
 
             // Clear input fields
             setName('');
