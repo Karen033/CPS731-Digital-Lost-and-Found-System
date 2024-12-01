@@ -97,23 +97,12 @@ function ItemMatchPage() {
         navigate("/LoginPage/Home");
     };
 
-    const handleYes = async(data) => {
+    const handleYes = async(itemData) => {
         if (!loggedInUser) {
             console.error("User not logged in.");
             alert("You need to log in to claim items.");
             return;
         }
-        alert("You have confirmed the item.");
-        navigate("/LoginPage/Home"); // Redirect after confirmation
-    };
-
-    const handleNo = () => {
-        alert("Sorry to hear that. You can try searching for more items.");
-        navigate("/LoginPage/Home"); // Redirect after rejection
-    };
-
-    const handleClaim = async (itemData) => {
-        
         try {
             // Insert the claim into the CLAIMED table
             const { data, error } = await supabase
@@ -134,7 +123,15 @@ function ItemMatchPage() {
             console.error("Unexpected error while claiming item:", error);
             alert("An unexpected error occurred. Please try again.");
         }
+        alert("You have confirmed the item.");
+        navigate("/LoginPage/Home"); // Redirect after confirmation
     };
+
+    const handleNo = () => {
+        alert("Sorry to hear that. You can try searching for more items.");
+        navigate("/LoginPage/Home"); // Redirect after rejection
+    };
+
 
     return (
         <div>
