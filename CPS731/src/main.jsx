@@ -39,7 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/LoginPage/ProfileManagement/ViewFoundReportHistory/:item_id/UpdateFoundReport" element={<UpdateFoundPage />} />
         <Route path="/LoginPage/ProfileManagement/Settings" element={<SettingsPage />} />
         <Route path="/LoginPage/Home/ItemPageMatch" element={<ItemPageMatch />} />
-        <Route path="/LoginPage/VerifyClaims" element={ localStorage.getItem('loggedInUser') && JSON.parse(localStorage.getItem('loggedInUser')).accountType === 'admin' ? (<VerifyClaimsPage /> ) : (<p>You do not have permission to view this page.</p>)
+        <Route path="/LoginPage/VerifyClaimsPage" element={ localStorage.getItem('loggedInUser') && JSON.parse(localStorage.getItem('loggedInUser')).accountType === 'admin' ? (<VerifyClaimsPage /> ) : (<p>You do not have permission to view this page.</p>)
   }
 />
       </Routes>
