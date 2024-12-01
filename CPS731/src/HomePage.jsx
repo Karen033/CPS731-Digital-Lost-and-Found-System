@@ -100,62 +100,69 @@ function HomePage() {
     };
 
     useEffect(() => {
-        const fetchItemsForUser = async () => {
-            if (!loggedInUser || !accountType) {
-                return;
-            }
+      const fetchItemsForUser = async () => {
+          if (!loggedInUser || !accountType) {
+              return;
+          }
+  
+          try {
+              if (accountType === "Admin") {
+                  // Admins can view all items
+                  const { data: allItems, error: itemsError } = await supabase
+                      .from("ITEM")
+                      .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL");
+  
+                  if (itemsError) {
+                      console.error("Error fetching items:", itemsError);
+                      setFetchError("Could not fetch items.");
+                  } else {
+                      setItems(allItems);
+                      setFetchError(null);
+                  }
+              } else if (accountType === "Student") {
+                  // Check if the student has submitted a Lost item report
+                  const { data: lostSubmissions, error: lostSubError } = await supabase
+                      .from("SUBMITS")
+                      .select("ITEM_ID")
+                      .eq("USER_ID", loggedInUser.id);
+  
+                  if (lostSubError) {
+                      console.error("Error fetching user's submissions:", lostSubError);
+                      setFetchError("Could not verify user submissions.");
+                      return;
+                  }
+                  const itemIdsToExclude = lostSubmissions.map((submission) => (submission.ITEM_ID));
+                  // Check if the user has submitted a lost item
+                  const userHasLostSubmission = itemIdsToExclude.length > 0;
+  
+                  // Build the query conditionally based on user submission
+                  const orCondition = `STATUS.eq.LOST${userHasLostSubmission ? ",STATUS.eq.FOUND" : ""}`;
 
-            try {
-                if (accountType === "Admin") {
-                    const { data: allItems, error: itemsError } = await supabase
-                        .from("ITEM")
-                        .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL");
+                  // Check the type of itemIdsToExclude (debugging step)
+                  console.log(itemIdsToExclude); // Ensure this is an array
 
-                    if (itemsError) {
-                        console.error("Error fetching items:", itemsError);
-                        setFetchError("Could not fetch items.");
-                    } else {
-                        setItems(allItems);
-                        setFetchError(null);
-                    }
-                } else if (accountType === "Student") {
-                    const { data: submitsData, error: submitsError } = await supabase
-                        .from("SUBMITS")
-                        .select("ITEM_ID")
-                        .eq("USER_ID", loggedInUser.id);
-
-                    if (submitsError) {
-                        console.error("Error checking lost item reports:", submitsError);
-                        setFetchError("Could not verify user submissions.");
-                        return;
-                    }
-
-                    if (submitsData.length === 0) {
-                        setFetchError("You need to report a lost item before viewing found items.");
-                        return;
-                    }
-
-                    const { data: foundItems, error: itemsError } = await supabase
-                        .from("ITEM")
-                        .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL")
-                        .eq("STATUS", "FOUND");
-
-                    if (itemsError) {
-                        console.error("Error fetching found items:", itemsError);
-                        setFetchError("Could not fetch found items.");
-                    } else {
-                        setItems(foundItems);
-                        setFetchError(null);
-                    }
-                }
-            } catch (error) {
-                console.error("Unexpected error fetching items:", error);
-                setFetchError("An unexpected error occurred.");
-            }
-        };
-
-        fetchItemsForUser();
-    }, [loggedInUser, accountType]);
+                  const { data: itemsForUser, error: itemsError } = await supabase
+                      .from("ITEM")
+                      .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL")
+                      .not("ITEM_ID", 'in', `(${itemIdsToExclude})`) // Ensure itemIdsToExclude is passed as an array
+                      .or(orCondition); // Include lost or found items based on the condition
+  
+                  if (itemsError) {
+                      console.error("Error fetching items for user:", itemsError);
+                      setFetchError("Could not fetch items.");
+                  } else {
+                      setItems(itemsForUser);
+                      setFetchError(null);
+                  }
+              }
+          } catch (error) {
+              console.error("Unexpected error fetching items:", error);
+              setFetchError("An unexpected error occurred.");
+          }
+      };
+  
+      fetchItemsForUser();
+  }, [loggedInUser, accountType]);  
 
     useEffect(() => {
         if (!loggedInUser) return;
