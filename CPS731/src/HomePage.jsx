@@ -113,7 +113,6 @@ function HomePage() {
 
             try {
                 if (accountType === "Admin") {
-                    // Admin: Fetch all lost and found items
                     const { data: allItems, error: itemsError } = await supabase
                         .from("ITEM")
                         .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL");
@@ -123,10 +122,9 @@ function HomePage() {
                         setFetchError("Could not fetch items.");
                     } else {
                         setItems(allItems);
-                        setFetchError(null); // Clear any previous errors
+                        setFetchError(null);
                     }
                 } else if (accountType === "Student") {
-                    // Student: Check if the user has reported a lost item
                     const { data: submitsData, error: submitsError } = await supabase
                         .from("SUBMITS")
                         .select("ITEM_ID")
@@ -143,7 +141,6 @@ function HomePage() {
                         return;
                     }
 
-                    // Student: Fetch all found items
                     const { data: foundItems, error: itemsError } = await supabase
                         .from("ITEM")
                         .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL")
@@ -154,7 +151,7 @@ function HomePage() {
                         setFetchError("Could not fetch found items.");
                     } else {
                         setItems(foundItems);
-                        setFetchError(null); // Clear any previous errors
+                        setFetchError(null);
                     }
                 }
             } catch (error) {
