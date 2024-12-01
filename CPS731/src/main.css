@@ -655,3 +655,13 @@ h1 {
 .claimed-by {
   margin-top: 5px; /* Adds space between 'Found by' and 'Claimed by' */
 }
+
+.center-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* Adjust this to ensure proper centering */
+  font-size: 1.5em;
+  color: #555;
+  text-align: center;
+}
