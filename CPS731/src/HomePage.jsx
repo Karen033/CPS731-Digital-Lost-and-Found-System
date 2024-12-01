@@ -10,10 +10,10 @@ import { Link } from "react-router-dom";
 
 function HomePage() {
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const [accountType, setAccountType] = useState(null);  // To store the account type (Student/Admin)
+    const [accountType, setAccountType] = useState(null); // To store the account type (Student/Admin)
     const [items, setItems] = useState([]);
     const [fetchError, setFetchError] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");  // State to store the search query
+    const [searchQuery, setSearchQuery] = useState(""); // State to store the search query
     const navigate = useNavigate();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [unopenedCount, setUnopenedCount] = useState(0);
@@ -24,49 +24,46 @@ function HomePage() {
         if (user) {
             setLoggedInUser(user);
             fetchAccountType(user.id);
-            performMatchCheck(user.id)
+            performMatchCheck(user.id);
         }
     }, []);
+
     const performMatchCheck = async (userId) => {
-      try {
-          // Fetch the user's lost items
-          const { data: lostItems, error: lostError } = await supabase
-              .from("ITEM")
-              .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
-              .eq("STATUS", "LOST")
-              .eq("USER_ID", userId);
+        try {
+            const { data: lostItems, error: lostError } = await supabase
+                .from("ITEM")
+                .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
+                .eq("STATUS", "LOST")
+                .eq("USER_ID", userId);
 
-          if (lostError) {
-              console.error("Error fetching lost items:", lostError);
-              return;
-          }
+            if (lostError) {
+                console.error("Error fetching lost items:", lostError);
+                return;
+            }
 
-          // Iterate over the user's lost items to find matches
-          for (const lostItem of lostItems) {
-              const { data: matchingItems, error: matchError } = await supabase
-                  .from("ITEM")
-                  .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
-                  .eq("STATUS", "FOUND")
-                  .ilike("NAME", `%${lostItem.NAME}%`)
-                  .ilike("DESCRIPTION", `%${lostItem.DESCRIPTION}%`)
-                  .eq("LOCATION_ID", lostItem.LOCATION_ID);
+            for (const lostItem of lostItems) {
+                const { data: matchingItems, error: matchError } = await supabase
+                    .from("ITEM")
+                    .select("ITEM_ID, NAME, DESCRIPTION, LOCATION_ID")
+                    .eq("STATUS", "FOUND")
+                    .ilike("NAME", `%${lostItem.NAME}%`)
+                    .ilike("DESCRIPTION", `%${lostItem.DESCRIPTION}%`)
+                    .eq("LOCATION_ID", lostItem.LOCATION_ID);
 
-              if (matchError) {
-                  console.error("Error fetching matching items:", matchError);
-                  return;
-              }
+                if (matchError) {
+                    console.error("Error fetching matching items:", matchError);
+                    return;
+                }
 
-              if (matchingItems && matchingItems.length > 0) {
-                  // Navigate to the match page with matching items
-                  navigate("/LoginPage/Home/ItemPageMatch", { state: { matches: matchingItems } });
-                  return; // Stop further checks once a match is found
-              }
-          }
-      } catch (error) {
-          console.error("Unexpected error during match checking:", error);
-      }
-  };
-
+                if (matchingItems && matchingItems.length > 0) {
+                    navigate("/LoginPage/Home/ItemPageMatch", { state: { matches: matchingItems } });
+                    return; // Stop further checks once a match is found
+                }
+            }
+        } catch (error) {
+            console.error("Unexpected error during match checking:", error);
+        }
+    };
 
     // Fetch account type (Student/Admin) from USERS table
     const fetchAccountType = async (userId) => {
@@ -82,13 +79,12 @@ function HomePage() {
                 return;
             }
 
-            setAccountType(data.ACCOUNT_TYPE);  // Store account type
+            setAccountType(data.ACCOUNT_TYPE); // Store account type
         } catch (error) {
             console.error("Error fetching account type:", error);
         }
     };
-   
-    // Open confirmation popup
+
     const handleReportClick = () => {
         setIsPopupOpen(true);
     };
@@ -103,7 +99,6 @@ function HomePage() {
         navigate("/LoginPage/FoundItemReport");
     };
 
-    // Fetch items based on account type (Admin or Student)
     useEffect(() => {
         const fetchItemsForUser = async () => {
             if (!loggedInUser || !accountType) {
@@ -112,7 +107,6 @@ function HomePage() {
 
             try {
                 if (accountType === "Admin") {
-                    // Admin: Fetch all lost and found items
                     const { data: allItems, error: itemsError } = await supabase
                         .from("ITEM")
                         .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL");
@@ -122,10 +116,9 @@ function HomePage() {
                         setFetchError("Could not fetch items.");
                     } else {
                         setItems(allItems);
-                        setFetchError(null); // Clear any previous errors
+                        setFetchError(null);
                     }
                 } else if (accountType === "Student") {
-                    // Student: Check if the user has reported a lost item
                     const { data: submitsData, error: submitsError } = await supabase
                         .from("SUBMITS")
                         .select("ITEM_ID")
@@ -142,7 +135,6 @@ function HomePage() {
                         return;
                     }
 
-                    // Student: Fetch all found items
                     const { data: foundItems, error: itemsError } = await supabase
                         .from("ITEM")
                         .select("ITEM_ID, NAME, DESCRIPTION, STATUS, IMAGE_URL")
@@ -153,7 +145,7 @@ function HomePage() {
                         setFetchError("Could not fetch found items.");
                     } else {
                         setItems(foundItems);
-                        setFetchError(null); // Clear any previous errors
+                        setFetchError(null);
                     }
                 }
             } catch (error) {
@@ -165,7 +157,6 @@ function HomePage() {
         fetchItemsForUser();
     }, [loggedInUser, accountType]);
 
-    // Fetch unopened notifications count
     useEffect(() => {
         if (!loggedInUser) return;
 
@@ -192,17 +183,13 @@ function HomePage() {
         navigate("/LoginPage");
     };
 
-    // Filter items based on search query
     const filteredItems = items.filter((item) =>
         item.NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.DESCRIPTION.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-
-
     return (
         <div className="home-page">
-            {/* Header Section */}
             <header className="header">
                 <div>
                     <img src={tmuLogo} className="header_logo" />
@@ -274,7 +261,6 @@ function HomePage() {
                 </div>
             </header>
 
-            {/* Main Content Section */}
             {fetchError ? (
                 <div className="center-message">
                     <p className="error">{fetchError}</p>
@@ -297,6 +283,9 @@ function HomePage() {
                                 <p className={`item-status ${item.STATUS.toLowerCase()}`}>
                                     {item.STATUS}
                                 </p>
+                                <button className="claim-button" onClick={() => handleClaim(item)}>
+                                    Claim
+                                </button>
                             </div>
                         ))
                     ) : (

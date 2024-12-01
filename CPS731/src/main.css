@@ -655,3 +655,18 @@ h1 {
 .claimed-by {
   margin-top: 5px; /* Adds space between 'Found by' and 'Claimed by' */
 }
+
+.claim-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #6da9e9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.claim-button:hover {
+  background-color: #cee6ff;
+}
