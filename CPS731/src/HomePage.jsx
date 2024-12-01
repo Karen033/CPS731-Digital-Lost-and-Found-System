@@ -178,6 +178,35 @@ function HomePage() {
         fetchUnopenedNotifications();
     }, [loggedInUser]);
 
+    const handleClaim = async (item) => {
+      if (!loggedInUser) {
+          console.error("User not logged in.");
+          alert("You need to log in to claim items.");
+          return;
+      }
+  
+      try {
+          // Insert the claim into the CLAIMED table
+          const { data, error } = await supabase
+              .from("CLAIMED")
+              .insert({
+                  ITEM_ID: item.ITEM_ID,
+                  CLAIMANT_ID: loggedInUser.id,
+              });
+  
+          if (error) {
+              console.error("Error claiming item:", error);
+              alert("An error occurred while claiming the item. Please try again.");
+          } else {
+              console.log("Item claimed successfully:", data);
+              alert(`You have successfully claimed the item: ${item.NAME}`);
+          }
+      } catch (error) {
+          console.error("Unexpected error while claiming item:", error);
+          alert("An unexpected error occurred. Please try again.");
+      }
+  };
+
     const handleLogout = () => {
         localStorage.removeItem("loggedInUser");
         navigate("/LoginPage");
