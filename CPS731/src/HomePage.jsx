@@ -13,6 +13,7 @@ function HomePage() {
     const [accountType, setAccountType] = useState(null);  // To store the account type (Student/Admin)
     const [items, setItems] = useState([]);
     const [fetchError, setFetchError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");  // State to store the search query
     const navigate = useNavigate();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [unopenedCount, setUnopenedCount] = useState(0);
@@ -150,6 +151,12 @@ function HomePage() {
         navigate("/LoginPage");
     };
 
+    // Filter items based on search query
+    const filteredItems = items.filter((item) =>
+        item.NAME.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.DESCRIPTION.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="home-page">
             {/* Header Section */}
@@ -161,7 +168,9 @@ function HomePage() {
                     <input
                         className="search"
                         type="text"
-                        placeholder="search"
+                        placeholder="Search"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         style={{
                             paddingRight: "30px",
                             width: "400px",
@@ -229,8 +238,8 @@ function HomePage() {
                 </div>
             ) : (
                 <div className="item-container">
-                    {items.length > 0 ? (
-                        items.map((item) => (
+                    {filteredItems.length > 0 ? (
+                        filteredItems.map((item) => (
                             <div key={item.ITEM_ID} className="item-card">
                                 {item.IMAGE_URL && (
                                     <img
